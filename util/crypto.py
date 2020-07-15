@@ -10,7 +10,6 @@ class Crypto(object):
         self.inFile = True if len(fileParam) > 1 else False
         self.key_bytes = key_bytes 
         self.session_bytes = session_bytes
-        self.saveKeyGen()
          
     def writeFile(self, filename, payload):
         with open(filename, "wb") as fp:

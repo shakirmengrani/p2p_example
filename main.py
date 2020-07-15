@@ -2,6 +2,7 @@ import sys, time
 from network.peer import Peer
 from util import upnp, crypto
 hash = crypto.Crypto()
+hash.saveKeyGen()
 
 def encode_payload(data):
     enc_session_key, nonce, tag, ciphertext = hash.encrypt(data)

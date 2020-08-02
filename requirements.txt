@@ -1,2 +1,4 @@
 pycryptodome
 gevent
+msgpack
+protobuf

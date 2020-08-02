@@ -1,27 +1,15 @@
 import sys, time
 from network.peer import Peer
-from util import upnp, crypto
-hash = crypto.Crypto()
-hash.saveKeyGen()
+from util import upnp, pack
+from protos import header_pb2
 
-def encode_payload(data):
-    enc_session_key, nonce, tag, ciphertext = hash.encrypt(data)
-    return str({
-        "enc_session_key": enc_session_key, 
-        "nonce": nonce, 
-        "tag": tag, 
-        "ciphertext": ciphertext
-    })
-
-def decode_payload(data):
-    import ast
-    dic = ast.literal_eval(data.decode())
-    text = hash.decrypt(dic)
-    print(text)
+message_pack = pack.Pack(header_pb2.Chunk())
 
 def serverHandle(conn, payload):
     print(f'server Handle:')
-    decode_payload(payload)
+    print(message_pack.unpack(payload))
+    
+    # decode_payload(payload)
 
 def clientHandle(sock, payload):
     print(f'client Handle:')
@@ -48,7 +36,7 @@ def action(msg):
         except:
             print("Your router may have disabled / blocked UPnP service")
     elif "send message" in msg: 
-        client.request(encode_payload(" ".join(msg.split(" ")[2:])).encode())
+        client.request(message_pack.pack(" ".join(msg.split(" ")[2:])))
     elif msg == "quit":
         server.terminate()
         print("bye bye")

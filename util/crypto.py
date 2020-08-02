@@ -33,8 +33,8 @@ class Crypto(object):
             self.writeFile(self.public_key, public_key)
         else:
             self.session_key = session_key
-            self.private_key = private_key
-            self.public_key = public_key
+            self.private_key = private_key if self.private_key is None else self.private_key
+            self.public_key = public_key if self.public_key is None else self.public_key
 
     def encrypt(self, payload):
         recipient_key = RSA.import_key(self.readKey(self.public_key, self.inFile))
@@ -46,10 +46,10 @@ class Crypto(object):
 
     def decrypt(self, params):
         private_key = RSA.import_key(self.readKey(self.private_key, self.inFile))
-        enc_session_key = params["enc_session_key"]
-        nonce = params["nonce"]
-        tag = params["tag"]
-        ciphertext = params["ciphertext"]
+        enc_session_key = params[0]
+        nonce = params[1]
+        tag = params[2]
+        ciphertext = params[3]
         cipher_rsa = PKCS1_OAEP.new(private_key)
         session_key = cipher_rsa.decrypt(enc_session_key)
         cipher_aes = AES.new(session_key, AES.MODE_EAX, nonce)
@@ -66,5 +66,8 @@ if "__main__" == __name__:
     }
     '''
     hash = Crypto()
-    data = hash.decrypt(hash.encrypt("Hello World"))
+    hash.saveKeyGen()
+    enc_data = hash.encrypt("Hello World")
+    data = hash.decrypt(enc_data)
+    print(enc_data)
     print(data)

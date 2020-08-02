@@ -4,7 +4,7 @@ class Peer(threading.Thread):
 
     def __init__(self, flag='client', host = socket.gethostname(), port=1800, handler = None):
         self.flag = flag
-        self.headersize = 1024
+        self.headersize = 10240
         self.host = host
         self.port = port
         self.handler = handler

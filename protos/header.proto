@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package stream;
+
+message Chunk{
+    bytes session_key = 1;
+    bytes nounce = 2;
+    bytes tag = 3;
+    bytes ciphertext = 4;
+    string private_key = 5;
+    string public_key = 6;
+}
+
+
+message Chunks{
+    repeated Chunk chunk = 1;
+}
